@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Bandung OpenTrip Planner</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<!-- Top Nav -->
+<header class="topbar">
+    <div class="topbar__inner">
+        <div class="brand">
+            <div class="brand__logo" aria-hidden="true">🌴</div>
+            <div class="brand__text">
+                <div class="brand__title">Bandung OpenTrip Planner</div>
+                <div class="brand__sub">Discover • Book (dummy) • Review</div>
+            </div>
+        </div>
+
+        <div class="topbar__actions">
+            <div class="pill">
+                <span id="langLabel" class="pill__label">UI</span>
+                <select id="uiLang" class="pill__select" aria-label="Language">
+                    <option value="EN" selected>EN</option>
+                    <option value="ID">ID</option>
+                </select>
+            </div>
+            <button id="openMyBookings" class="btn btn--ghost" type="button">
+                <span class="btn__icon">🧾</span><span data-i18n="myBookings">My Bookings</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="container hero__grid">
+        <div class="hero__left">
+            <div class="kicker" data-i18n="kicker">Bandung, Indonesia</div>
+            <h1 class="hero__title" data-i18n="heroTitle">
+                Plan a trip with locals.<br/>No language stress.
+            </h1>
+            <p class="hero__desc" data-i18n="heroDesc">
+                Pick a destination like Braga or Lembang, choose OpenTrip or Guide plan,
+                then book, pay (dummy), and leave reviews.
+            </p>
+
+            <div class="hero__searchCard">
+                <div class="searchRow">
+                    <label class="field">
+                        <span class="field__label" data-i18n="destination">Destination</span>
+                        <select id="filterDestination" class="field__control">
+                            <option value="ALL" selected data-i18n="all">All</option>
+                            <option value="Braga">Braga</option>
+                            <option value="Lembang">Lembang</option>
+                        </select>
+                    </label>
+
+                    <label class="field">
+                        <span class="field__label" data-i18n="style">Style</span>
+                        <select id="filterStyle" class="field__control">
+                            <option value="ALL" selected data-i18n="all">All</option>
+                            <option value="OpenTrip">OpenTrip</option>
+                            <option value="GuidePlan" data-i18n="guidePlan">Guide plan</option>
+                        </select>
+                    </label>
+
+                    <label class="field">
+                        <span class="field__label" data-i18n="tripLang">Trip language</span>
+                        <select id="filterTripLang" class="field__control">
+                            <option value="ALL" selected data-i18n="all">All</option>
+                            <option value="EN">EN</option>
+                            <option value="ID">ID</option>
+                            <option value="EN/ID">EN/ID</option>
+                        </select>
+                    </label>
+
+                    <label class="field field--wide">
+                        <span class="field__label" data-i18n="search">Search</span>
+                        <input id="filterQuery" class="field__control" type="text" placeholder="Braga, coffee, art..." />
+                    </label>
+
+                    <button id="btnFind" class="btn btn--primary" type="button">
+                        <span class="btn__icon">🔎</span><span data-i18n="findTrips">Find trips</span>
+                    </button>
+                </div>
+
+                <div class="searchMeta">
+                    <div class="chips" id="activeChips"></div>
+                    <button id="btnReset" class="btn btn--link" type="button" data-i18n="reset">Reset</button>
+                </div>
+            </div>
+
+            <div class="hero__trust">
+                <div class="trustItem">
+                    <div class="trustIcon">🗣️</div>
+                    <div>
+                        <div class="trustTitle" data-i18n="trust1Title">Language filters</div>
+                        <div class="trustSub" data-i18n="trust1Sub">ID / EN UI + trip language tags</div>
+                    </div>
+                </div>
+                <div class="trustItem">
+                    <div class="trustIcon">🤝</div>
+                    <div>
+                        <div class="trustTitle" data-i18n="trust2Title">Community-made</div>
+                        <div class="trustSub" data-i18n="trust2Sub">Trips made by locals & ITB partners</div>
+                    </div>
+                </div>
+                <div class="trustItem">
+                    <div class="trustIcon">⭐</div>
+                    <div>
+                        <div class="trustTitle" data-i18n="trust3Title">Reviews included</div>
+                        <div class="trustSub" data-i18n="trust3Sub">Experience + guide ratings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero__right">
+            <div class="heroCard">
+                <div class="heroCard__title" data-i18n="popular">Popular right now</div>
+                <div class="carousel" id="promoCarousel" aria-label="promotions">
+                    <!-- slides injected by JS -->
+                </div>
+                <div class="carouselDots" id="promoDots" aria-hidden="true"></div>
+            </div>
+
+            <div class="miniGrid">
+                <button class="miniCard" id="quickBraga" type="button">
+                    <div class="miniCard__img" data-img="braga"></div>
+                    <div class="miniCard__text">
+                        <div class="miniCard__title">Braga</div>
+                        <div class="miniCard__sub" data-i18n="quickBraga">Art, heritage, food</div>
+                    </div>
+                    <span class="miniCard__go">→</span>
+                </button>
+
+                <button class="miniCard" id="quickLembang" type="button">
+                    <div class="miniCard__img" data-img="lembang"></div>
+                    <div class="miniCard__text">
+                        <div class="miniCard__title">Lembang</div>
+                        <div class="miniCard__sub" data-i18n="quickLembang">Nature, coffee, views</div>
+                    </div>
+                    <span class="miniCard__go">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main list -->
+<main class="container main">
+    <div class="sectionHead">
+        <div>
+            <h2 class="sectionTitle" data-i18n="discover">Discover OpenTrips</h2>
+            <p class="sectionDesc" data-i18n="discoverDesc">Click a card to see details. Then book → pay → review.</p>
+        </div>
+        <div class="sortWrap">
+            <label class="field field--inline">
+                <span class="field__label" data-i18n="sort">Sort</span>
+                <select id="sortBy" class="field__control">
+                    <option value="NEWEST" selected data-i18n="newest">Newest</option>
+                    <option value="RATING" data-i18n="topRated">Top rated</option>
+                    <option value="PRICE_LOW" data-i18n="priceLow">Price: low</option>
+                    <option value="PRICE_HIGH" data-i18n="priceHigh">Price: high</option>
+                </select>
+            </label>
+            <div class="resultCount"><span id="resultCount">0</span> <span data-i18n="results">results</span></div>
+        </div>
+    </div>
+
+    <div id="tripGrid" class="grid"></div>
+
+    <div id="emptyState" class="empty hidden">
+        <div class="empty__icon">🧭</div>
+        <div class="empty__title" data-i18n="emptyTitle">No trips found</div>
+        <div class="empty__sub" data-i18n="emptySub">Try changing filters or search keywords.</div>
+        <button id="btnReset2" class="btn btn--primary" type="button" data-i18n="reset">Reset</button>
+    </div>
+</main>
+
+<!-- Detail / booking modal -->
+<div class="modal hidden" id="modal">
+    <div class="modal__backdrop" id="modalBackdrop"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal__close" id="modalClose" type="button" aria-label="Close">✕</button>
+
+        <div class="modal__hero">
+            <div class="modal__img" id="modalImg" aria-hidden="true"></div>
+            <div class="modal__heroText">
+                <div class="badgeRow" id="modalBadges"></div>
+                <h3 class="modal__title" id="modalTitle">Trip title</h3>
+                <div class="modal__meta" id="modalMeta"></div>
+            </div>
+        </div>
+
+        <div class="stepper">
+            <button class="step is-active" id="stepBtn1" type="button"><span class="step__num">1</span><span data-i18n="booking">Booking</span></button>
+            <button class="step" id="stepBtn2" type="button"><span class="step__num">2</span><span data-i18n="payment">Payment</span></button>
+            <button class="step" id="stepBtn3" type="button"><span class="step__num">3</span><span data-i18n="review">Review</span></button>
+        </div>
+
+        <!-- Step 1 -->
+        <section class="panel" id="panelBooking">
+            <div class="panel__head">
+                <div class="panel__title" data-i18n="bookingTitle">Reserve your spot</div>
+                <div class="panel__sub" data-i18n="bookingSub">Pick date, guests, contact. Total updates automatically.</div>
+            </div>
+            <div class="formGrid">
+                <label class="field">
+                    <span class="field__label" data-i18n="date">Date</span>
+                    <input id="bookDate" class="field__control" type="date" />
+                </label>
+                <label class="field">
+                    <span class="field__label" data-i18n="guests">Guests</span>
+                    <input id="bookGuests" class="field__control" type="number" min="1" max="20" value="2" />
+                </label>
+                <label class="field field--wide">
+                    <span class="field__label" data-i18n="contact">Contact</span>
+                    <input id="bookContact" class="field__control" type="text" placeholder="Email / WhatsApp" />
+                </label>
+                <div class="totalBox">
+                    <div class="totalBox__label" data-i18n="total">Total</div>
+                    <div class="totalBox__value" id="bookTotal">Rp 0</div>
+                </div>
+            </div>
+            <div class="panel__actions">
+                <button class="btn btn--primary" id="toPayment" type="button">
+                    <span class="btn__icon">💳</span><span data-i18n="goPayment">Go to Payment</span>
+                </button>
+                <button class="btn btn--ghost" id="saveDraft" type="button">
+                    <span class="btn__icon">💾</span><span data-i18n="saveDraft">Save draft</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 2 -->
+        <section class="panel hidden" id="panelPayment">
+            <div class="panel__head">
+                <div class="panel__title" data-i18n="paymentTitle">Payment (dummy)</div>
+                <div class="panel__sub" data-i18n="paymentSub">No real money. This just marks the booking as “paid”.</div>
+            </div>
+
+            <div class="paymentCard">
+                <div class="payRow">
+                    <div>
+                        <div class="payLabel" data-i18n="payingFor">Paying for</div>
+                        <div class="payValue" id="payTripTitle">Trip title</div>
+                    </div>
+                    <div class="payAmount" id="payAmount">Rp 0</div>
+                </div>
+                <div class="payMethods">
+                    <label class="payMethod">
+                        <input type="radio" name="pay" checked />
+                        <span>QRIS</span>
+                    </label>
+                    <label class="payMethod">
+                        <input type="radio" name="pay" />
+                        <span>Card</span>
+                    </label>
+                    <label class="payMethod">
+                        <input type="radio" name="pay" />
+                        <span>Transfer</span>
+                    </label>
+                </div>
+                <div class="panel__actions">
+                    <button class="btn btn--primary" id="confirmPay" type="button">
+                        <span class="btn__icon">✅</span><span data-i18n="confirmPay">Confirm Payment</span>
+                    </button>
+                    <button class="btn btn--ghost" id="backToBooking" type="button">
+                        <span class="btn__icon">←</span><span data-i18n="back">Back</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3 -->
+        <section class="panel hidden" id="panelReview">
+            <div class="panel__head">
+                <div class="panel__title" data-i18n="reviewTitle">Leave a review</div>
+                <div class="panel__sub" data-i18n="reviewSub">Rate the experience and the guide. Then submit.</div>
+            </div>
+
+            <div class="reviewGrid">
+                <div class="reviewBox">
+                    <div class="reviewBox__label" data-i18n="experienceRating">Experience rating</div>
+                    <div class="stars" id="starsExp" aria-label="Experience rating"></div>
+                </div>
+
+                <div class="reviewBox">
+                    <div class="reviewBox__label" data-i18n="guideRating">Guide rating</div>
+                    <div class="stars" id="starsGuide" aria-label="Guide rating"></div>
+                </div>
+
+                <label class="field field--wide">
+                    <span class="field__label" data-i18n="comment">Comment</span>
+                    <textarea id="reviewComment" class="field__control field__control--textarea" rows="3" placeholder="What was fun? What could be better?"></textarea>
+                </label>
+            </div>
+
+            <div class="panel__actions">
+                <button class="btn btn--primary" id="submitReview" type="button">
+                    <span class="btn__icon">📝</span><span data-i18n="submit">Submit review</span>
+                </button>
+                <button class="btn btn--ghost" id="newBooking" type="button">
+                    <span class="btn__icon">➕</span><span data-i18n="newTrip">Pick another trip</span>
+                </button>
+            </div>
+        </section>
+
+        <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+    </div>
+</div>
+
+<!-- My bookings drawer -->
+<div class="drawer hidden" id="drawer">
+    <div class="drawer__backdrop" id="drawerBackdrop"></div>
+    <div class="drawer__panel" role="dialog" aria-modal="true">
+        <div class="drawer__head">
+            <div class="drawer__title" data-i18n="myBookings">My Bookings</div>
+            <button class="drawer__close" id="drawerClose" type="button" aria-label="Close">✕</button>
+        </div>
+        <div class="drawer__body">
+            <div id="bookingList" class="bookingList"></div>
+            <div id="bookingEmpty" class="empty small hidden">
+                <div class="empty__icon">🧾</div>
+                <div class="empty__title" data-i18n="noBookings">No bookings yet</div>
+                <div class="empty__sub" data-i18n="noBookingsSub">Choose a trip and book it. It will appear here.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container footer__inner">
+        <div>© <span id="year"></span> Bandung OpenTrip Planner (prototype)</div>
+        <div class="footer__note" data-i18n="footerNote">No external APIs. Dummy data only.</div>
+    </div>
+</footer>
+
+<script src="./script.js"></script>
+</body>
+</html>
