@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bandung OpenTrip Planner</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="brandMark">B</div>
+        <div>
+            <div class="brandTitle" data-i18n="appTitle">Bandung OpenTrip Planner</div>
+            <div class="brandSub" data-i18n="appSubtitle">Find trips, chat, book (dummy), and review.</div>
+        </div>
+    </div>
+
+    <div class="topbarRight">
+        <div class="pill">
+            <span class="muted" data-i18n="uiLabel">UI</span>
+            <select id="uiLang" class="select small" aria-label="UI Language">
+                <option value="EN">EN</option>
+                <option value="ID">ID</option>
+                <option value="JA">JA</option>
+            </select>
+        </div>
+        <button id="goTopBtn" class="btn ghost" type="button" data-i18n="topBtn">Top</button>
+    </div>
+</header>
+
+<main class="wrap">
+    <!-- HERO -->
+    <section class="heroCard" id="top">
+        <div class="heroLeft">
+            <h1 class="heroTitle" data-i18n="heroTitle">Plan your Bandung trip with locals</h1>
+            <p class="heroText" data-i18n="heroText">
+                Choose language, destination, and style. Join OpenTrips or request a guide-made plan. Then book, pay (demo), and review.
+            </p>
+
+            <div class="heroSearch">
+                <div class="field">
+                    <label class="label" data-i18n="destLabel">Destination</label>
+                    <select id="heroDestination" class="select">
+                        <option value="All" data-i18n="all">All</option>
+                        <option value="Braga">Braga</option>
+                        <option value="Lembang">Lembang</option>
+                        <option value="Dago">Dago</option>
+                        <option value="Ciwidey">Ciwidey</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="styleLabel">Style</label>
+                    <select id="heroStyle" class="select">
+                        <option value="All" data-i18n="all">All</option>
+                        <option value="OpenTrip" data-i18n="styleOpenTrip">OpenTrip</option>
+                        <option value="GuidePlan" data-i18n="styleGuidePlan">Guide plan</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="searchLabel">Search</label>
+                    <input id="heroSearchText" class="input" type="text" placeholder="Braga, coffee, art..." />
+                </div>
+
+                <button id="heroSearchBtn" class="btn primary" type="button" data-i18n="searchBtn">Search</button>
+            </div>
+
+            <div class="quickLinks">
+                <button class="btn soft" type="button" id="linkExplore" data-i18n="qlExplore">Explore Trips</button>
+                <button class="btn soft" type="button" id="linkGuide" data-i18n="qlGuide">Plan with a Guide</button>
+                <button class="btn soft" type="button" id="linkOpenTrip" data-i18n="qlOpenTrip">OpenTrip (Community)</button>
+            </div>
+        </div>
+
+        <div class="heroRight">
+            <div class="carouselHead">
+                <div class="sectionTitle" data-i18n="popularDest">Popular destinations</div>
+                <div class="muted small" data-i18n="tapToFilter">Tap to filter</div>
+            </div>
+
+            <div class="destRow" id="destRow">
+                <!-- injected -->
+            </div>
+
+            <div class="howItWorks">
+                <div class="sectionTitle" data-i18n="howItWorks">How it works</div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="stepNum">1</div>
+                        <div>
+                            <div class="stepTitle" data-i18n="step1Title">Discover</div>
+                            <div class="muted" data-i18n="step1Text">Filter by language, destination, and style.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="stepNum">2</div>
+                        <div>
+                            <div class="stepTitle" data-i18n="step2Title">Chat & Book</div>
+                            <div class="muted" data-i18n="step2Text">Ask questions, reserve date & guests (demo).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="stepNum">3</div>
+                        <div>
+                            <div class="stepTitle" data-i18n="step3Title">Review</div>
+                            <div class="muted" data-i18n="step3Text">Rate experience + guide and share impressions.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN APP -->
+    <section class="grid">
+        <!-- LEFT: List & filters -->
+        <section class="panel">
+            <div class="panelHead">
+                <div>
+                    <div class="panelTitle" data-i18n="discoverTitle">Discover OpenTrips</div>
+                    <div class="muted" data-i18n="discoverSub">Filter by language, destination, and style. Pick one to see details.</div>
+                </div>
+                <div class="countPill"><span id="resultCount">0</span>&nbsp;<span data-i18n="results">results</span></div>
+            </div>
+
+            <div class="filters">
+                <div class="field">
+                    <label class="label" data-i18n="tripLangLabel">Trip language</label>
+                    <select id="filterTripLang" class="select">
+                        <option value="All" data-i18n="all">All</option>
+                        <option value="EN">EN</option>
+                        <option value="ID">ID</option>
+                        <option value="EN/ID">EN/ID</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="destLabel">Destination</label>
+                    <select id="filterDestination" class="select">
+                        <option value="All" data-i18n="all">All</option>
+                        <option value="Braga">Braga</option>
+                        <option value="Lembang">Lembang</option>
+                        <option value="Dago">Dago</option>
+                        <option value="Ciwidey">Ciwidey</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="styleLabel">Style</label>
+                    <select id="filterStyle" class="select">
+                        <option value="All" data-i18n="all">All</option>
+                        <option value="OpenTrip" data-i18n="styleOpenTrip">OpenTrip</option>
+                        <option value="GuidePlan" data-i18n="styleGuidePlan">Guide plan</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="sortLabel">Sort</label>
+                    <select id="filterSort" class="select">
+                        <option value="newest" data-i18n="sortNewest">Newest</option>
+                        <option value="rating" data-i18n="sortRating">Top rated</option>
+                        <option value="priceLow" data-i18n="sortPriceLow">Price: low</option>
+                        <option value="priceHigh" data-i18n="sortPriceHigh">Price: high</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" data-i18n="minRatingLabel">Min rating</label>
+                    <select id="filterMinRating" class="select">
+                        <option value="0" data-i18n="any">Any</option>
+                        <option value="4">4.0+</option>
+                        <option value="4.5">4.5+</option>
+                    </select>
+                </div>
+
+                <div class="field span2">
+                    <label class="label" data-i18n="searchLabel">Search</label>
+                    <input id="filterSearch" class="input" type="text" placeholder="Braga, coffee, art..." />
+                </div>
+
+                <button id="resetBtn" class="btn ghost" type="button" data-i18n="reset">Reset</button>
+            </div>
+
+            <div class="list" id="tripList">
+                <!-- injected -->
+            </div>
+        </section>
+
+        <!-- RIGHT: Detail + flow -->
+        <section class="panel">
+            <div class="panelHead">
+                <div>
+                    <div class="panelTitle" data-i18n="selectedTitle">Selected Trip</div>
+                    <div class="muted" data-i18n="selectedSub">See details and move through Booking → Payment → Review.</div>
+                </div>
+                <div class="flowPills" id="flowPills" aria-label="Flow steps">
+                    <button class="pillBtn" type="button" data-step="1">1</button>
+                    <button class="pillBtn" type="button" data-step="2">2</button>
+                    <button class="pillBtn" type="button" data-step="3">3</button>
+                </div>
+            </div>
+
+            <div id="emptyState" class="empty">
+                <div class="emptyCard">
+                    <div class="emptyTitle" data-i18n="emptyTitle">Pick a trip on the left</div>
+                    <div class="muted" data-i18n="emptyText">Then you can see details, book, pay (demo), and review.</div>
+                    <button id="pickFirstBtn" class="btn primary" type="button" data-i18n="pickFirst">Pick the first trip</button>
+                </div>
+            </div>
+
+            <div id="detail" class="detail hidden">
+                <div class="detailTop">
+                    <div>
+                        <div class="detailTitle" id="detailTitle">—</div>
+                        <div class="chips" id="detailChips"></div>
+                    </div>
+                    <div class="priceBox">
+                        <div class="priceBig" id="detailPrice">—</div>
+                        <div class="muted small" data-i18n="perPerson">per person</div>
+                    </div>
+                </div>
+
+                <div class="detailMedia">
+                    <img id="detailImg" class="detailImg" alt="Trip image" />
+                    <div class="detailMeta">
+                        <div class="metaRow">
+                            <div class="metaLabel" data-i18n="guideLabel">Guide</div>
+                            <div class="metaValue" id="detailGuide">—</div>
+                        </div>
+                        <div class="metaRow">
+                            <div class="metaLabel" data-i18n="durationLabel">Duration</div>
+                            <div class="metaValue" id="detailDuration">—</div>
+                        </div>
+                        <div class="metaRow">
+                            <div class="metaLabel" data-i18n="meetingLabel">Meeting point</div>
+                            <div class="metaValue" id="detailMeeting">—</div>
+                        </div>
+                        <div class="metaRow">
+                            <div class="metaLabel" data-i18n="tagsLabel">Tags</div>
+                            <div class="metaValue" id="detailTags">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ratingLine">
+                    <div class="starsStatic" id="detailStars">★★★★★</div>
+                    <div class="muted" id="detailRatingText">—</div>
+                </div>
+
+                <!-- ACTIONS per style -->
+                <div class="actionBar">
+                    <button id="openTripDetailBtn" class="btn soft" type="button" data-i18n="seePlanDetail">See plan details</button>
+                    <button id="joinBtn" class="btn primary" type="button" data-i18n="join">Join</button>
+                    <button id="questionBtn" class="btn ghost" type="button" data-i18n="askQuestion">Ask a question</button>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- BOOKING -->
+                <section id="bookingSection" class="flowSection">
+                    <div class="sectionTitleRow">
+                        <div class="sectionTitle" data-i18n="bookingTitle">Booking</div>
+                        <div class="muted small" data-i18n="bookingNote">Demo: validates basic input.</div>
+                    </div>
+
+                    <div class="formGrid">
+                        <div class="field">
+                            <label class="label" data-i18n="dateLabel">Date</label>
+                            <input id="bookDate" class="input" type="date" />
+                        </div>
+
+                        <div class="field">
+                            <label class="label" data-i18n="guestsLabel">Guests</label>
+                            <input id="bookGuests" class="input" type="number" min="1" max="20" value="2" />
+                        </div>
+
+                        <div class="field span2">
+                            <label class="label" data-i18n="contactLabel">Contact</label>
+                            <input id="bookContact" class="input" type="text" placeholder="Email / WhatsApp" />
+                        </div>
+
+                        <div class="field">
+                            <label class="label" data-i18n="totalLabel">Total</label>
+                            <div class="totalBox" id="bookTotal">—</div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label" data-i18n="currencyHint">Currency</label>
+                            <div class="muted" id="currencyHint">—</div>
+                        </div>
+                    </div>
+
+                    <div class="actionRow">
+                        <button id="toPaymentBtn" class="btn primary" type="button" data-i18n="toPayment">Go to Payment</button>
+                    </div>
+                </section>
+
+                <!-- PAYMENT -->
+                <section id="paymentSection" class="flowSection hidden">
+                    <div class="sectionTitleRow">
+                        <div class="sectionTitle" data-i18n="paymentTitle">Payment</div>
+                        <div class="muted small" data-i18n="paymentNote">Demo only. No real transaction.</div>
+                    </div>
+
+                    <div class="payCard">
+                        <div class="payRow">
+                            <div class="muted" data-i18n="payAmount">Amount</div>
+                            <div class="payAmount" id="payAmount">—</div>
+                        </div>
+
+                        <div class="payMethods">
+                            <button class="btn soft payMethod" type="button" data-method="card">Card</button>
+                            <button class="btn soft payMethod" type="button" data-method="wallet">Wallet</button>
+                            <button class="btn soft payMethod" type="button" data-method="bank">Bank</button>
+                        </div>
+
+                        <button id="payNowBtn" class="btn primary" type="button" data-i18n="payNow">Pay (Demo)</button>
+                    </div>
+                </section>
+
+                <!-- REVIEW -->
+                <section id="reviewSection" class="flowSection hidden">
+                    <div class="sectionTitleRow">
+                        <div class="sectionTitle" data-i18n="reviewTitle">Review</div>
+                        <div class="muted small" data-i18n="reviewNote">Rate the experience and the guide.</div>
+                    </div>
+
+                    <div class="reviewGrid">
+                        <div class="reviewBox">
+                            <div class="reviewLabel" data-i18n="experienceRating">Experience</div>
+                            <div class="starPicker" id="expStars"></div>
+                        </div>
+                        <div class="reviewBox">
+                            <div class="reviewLabel" data-i18n="guideRating">Guide</div>
+                            <div class="starPicker" id="guideStars"></div>
+                        </div>
+                    </div>
+
+                    <div class="tagArea">
+                        <div class="reviewLabel" data-i18n="quickTags">Quick tags</div>
+                        <div class="tagPills" id="tagPills"></div>
+                        <div class="muted small" data-i18n="tagHint">Pick a few bright feelings.</div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="commentLabel">Comment</label>
+                        <textarea id="reviewComment" class="textarea" rows="3" placeholder="Write your review..."></textarea>
+                    </div>
+
+                    <div class="actionRow">
+                        <button id="submitReviewBtn" class="btn primary" type="button" data-i18n="submitReview">Submit review</button>
+                        <button id="newBookingBtn" class="btn ghost" type="button" data-i18n="newBooking">Book another</button>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="sectionTitle" data-i18n="recentReviews">Recent reviews (demo)</div>
+                    <div id="reviewList" class="reviewList"></div>
+                </section>
+            </div>
+        </section>
+    </section>
+
+    <!-- GUIDE REQUEST + CHAT (②) -->
+    <section class="panel wide" id="guidePanel">
+        <div class="panelHead">
+            <div>
+                <div class="panelTitle" data-i18n="guidePanelTitle">Plan with a Guide</div>
+                <div class="muted" data-i18n="guidePanelSub">
+                    Send your request. After matching, you will move to a talk room.
+                </div>
+            </div>
+        </div>
+
+        <div class="guideGrid">
+            <div class="guideForm">
+                <div class="sectionTitle" data-i18n="guideRequestTitle">Request a guide-made plan</div>
+
+                <div class="formGrid">
+                    <div class="field">
+                        <label class="label" data-i18n="destLabel">Destination</label>
+                        <select id="guideDest" class="select">
+                            <option value="Braga">Braga</option>
+                            <option value="Lembang">Lembang</option>
+                            <option value="Dago">Dago</option>
+                            <option value="Ciwidey">Ciwidey</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="dateLabel">Date</label>
+                        <input id="guideDate" class="input" type="date" />
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="guestsLabel">Guests</label>
+                        <input id="guideGuests" class="input" type="number" min="1" max="20" value="2" />
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="uiLanguageLabel">Language</label>
+                        <select id="guideLang" class="select">
+                            <option value="EN">English</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="JA">日本語</option>
+                        </select>
+                    </div>
+
+                    <div class="field span2">
+                        <label class="label" data-i18n="interestLabel">Interests</label>
+                        <div class="interestPills" id="interestPills"></div>
+                    </div>
+                </div>
+
+                <button id="sendGuideReqBtn" class="btn primary" type="button" data-i18n="sendRequest">Send request</button>
+
+                <div class="muted small tip" data-i18n="guideTip">
+                    Demo: matching is instant. The talk room will show an icon slot + name.
+                </div>
+            </div>
+
+            <div class="chatBox" id="guideChatBox">
+                <div class="sectionTitle" data-i18n="talkRoomTitle">Talk room</div>
+                <div class="muted" id="guideChatHint" data-i18n="talkRoomHint">
+                    Send a request to get matched and start chatting.
+                </div>
+
+                <div class="chatHeader hidden" id="guideChatHeader">
+                    <div class="avatar big" aria-hidden="true"></div>
+                    <div>
+                        <div class="chatName" id="guideChatName">—</div>
+                        <div class="muted small" id="guideChatMeta">—</div>
+                    </div>
+                </div>
+
+                <div class="chatLog" id="guideChatLog"></div>
+
+                <div class="chatComposer">
+                    <input id="guideChatInput" class="input" type="text" placeholder="Type a message..." />
+                    <button id="guideSendBtn" class="btn primary" type="button" data-i18n="send">Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GROUP CHAT (③) -->
+    <section class="panel wide hidden" id="groupChatPanel">
+        <div class="panelHead">
+            <div>
+                <div class="panelTitle" data-i18n="groupChatTitle">OpenTrip Group Chat</div>
+                <div class="muted" id="groupChatSub">—</div>
+            </div>
+            <button id="closeGroupChatBtn" class="btn ghost" type="button" data-i18n="backToTrip">Back to trip</button>
+        </div>
+
+        <div class="groupChatWrap">
+            <div class="participants" id="participants">
+                <!-- injected -->
+            </div>
+
+            <div class="chatLog large" id="groupChatLog"></div>
+
+            <div class="chatComposer">
+                <input id="groupChatInput" class="input" type="text" placeholder="Type a message..." />
+                <button id="groupSendBtn" class="btn primary" type="button" data-i18n="send">Send</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+</main>
+
+<footer class="footer">
+    <div class="muted small">
+        <span data-i18n="footerNote">Prototype only. No external API. Dummy data & demo flows.</span>
+    </div>
+</footer>
+
+<script src="./script.js"></script>
+</body>
+</html>
